@@ -33,6 +33,17 @@ describe "Static pages" do
           expect(page).to have_selector("li##{item.id}", text: item.content)
         end
       end
+
+      describe "follower/following counts" do
+        let(:other_user) { FactoryGirl.create(:user) }
+        before do
+          other_user.follow!(user)
+          visit root_path
+        end
+
+        it { should have_link("0 following", href: following_user_path(user)) }
+        it { should have_link("1 followers", href: followers_user_path(user)) }
+      end
     end
   end
 
@@ -63,10 +74,5 @@ describe "Static pages" do
     expect(page).to have_title(full_title('About Us'))
     click_link "Help"
     expect(page).to have_title(full_title('Help'))
-    #click_link "Home"
-    #click_link "Sign up now!"
-    #expect(page).to # fill in
-    #click_link "drawing dead"
-    #expect(page).to #fill in
   end
 end
